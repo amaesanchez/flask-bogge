@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, jsonify
 from uuid import uuid4
 
 from boggle import BoggleGame
+from wordlist import english_words
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "this-is-secret"
@@ -35,7 +36,7 @@ def new_game():
 @app.post("/api/score-word")
 def score_word():
     """ should check if the word is legal, and return JSON """
-    word = request.json.get("word")
+    word = request.json.get("word").upper()
     game_id = request.json.get("game_id")
     game = games[game_id]
 
