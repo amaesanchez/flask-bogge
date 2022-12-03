@@ -36,7 +36,7 @@ class BoggleAppTestCase(TestCase):
             response = client.post('/api/new-game')
             json = response.get_json()
 
-
+            # assertIsInstance
             self.assertTrue(type(json["game_id"]) == str)
             self.assertTrue(type(json["board"]) == list)
             self.assertIn(json["game_id"], games)
@@ -51,6 +51,46 @@ class BoggleAppTestCase(TestCase):
         """Test if word is valid"""
 
         with self.client as client:
+
+            response = client.post('/api/new-game')
+            json = response.get_json()
+            game_id = json["game_id"]
+            game = games[game_id]
+
+            # WHY NOT OVERWRITING?
+            # breakpoint()
+            # for row in game.board:
+            #     row = ["C", "A", "T", "S", "S"]
+            # breakpoint()
+
+            game.board = [
+                ["C", "A", "T", "S", "S"],
+                ["C", "A", "T", "S", "S"],
+                ["C", "A", "T", "S", "S"],
+                ["C", "A", "T", "S", "S"],
+                ["C", "A", "T", "S", "S"]
+            ]
+
+
+            resp_ok = client.post("/api/score-word",
+                json={"game_id": game_id, "word": "CAT"})
+            resp_not_word = client.post("/api/score-word",
+                json={"game_id": game_id, "word": "CATSS"})
+            resp_not_on_board = client.post("/api/score-word",
+                json={"game_id": game_id, "word": "ABBEYS"})
+
+            data_ok = resp_ok.get_json()
+            data_not_word = resp_not_word.get_json()
+            data_not_on_board = resp_not_on_board.get_json()
+
+            self.assertEqual({ 'result' : 'ok'}, data_ok)
+            self.assertEqual({ 'result' : 'not-word'}, data_not_word)
+            self.assertEqual({ 'result' : 'not-on-board'}, data_not_on_board)
+
+
+
+
+
             ...
             # make a post request to /api/new-game
             # get the response body as json using .get_json()

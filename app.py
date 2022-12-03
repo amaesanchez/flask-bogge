@@ -43,10 +43,10 @@ def score_word():
 
     # if BoggleGame.is_word_in_word_list(word) and BoggleGame.check_word_on_board(word):
     #     result = { "result" : "ok"}
-    breakpoint()
-    if game.is_word_in_word_list(word) == False:
+
+    if not game.is_word_in_word_list(word):
         result = { "result" : "not-word"}
-    elif game.check_word_on_board(word) == False:
+    elif not game.check_word_on_board(word):
         result = { "result" : "not-on-board"}
-    breakpoint()
+
     return jsonify(result)
